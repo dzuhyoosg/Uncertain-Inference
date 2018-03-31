@@ -19,23 +19,25 @@ public class MyBNInferencer {
 		
 		if (args[0].contains(".xml")){
 			
-				XMLBIFParser xparser = new XMLBIFParser();
-				
-				try {
-					BayesianNetwork bn = xparser.readNetworkFromFile(args[0]);
-					Assignment asgmt = new Assignment();
-					for (int i=2; i<args.length; i+=2) {
-						asgmt.put(bn.getVariableByName(args[i]), args[i+1]);
-					}
-					Distribution d = ea.ask(bn, bn.getVariableByName(args[1]), asgmt);
-					System.out.println(d);
-				} catch (IOException | ParserConfigurationException | SAXException e) {
-					e.printStackTrace();
+			XMLBIFParser xparser = new XMLBIFParser();
+			
+			try {
+				BayesianNetwork bn = xparser.readNetworkFromFile(args[0]);
+				System.out.println(bn);
+				Assignment asgmt = new Assignment();
+				for (int i=2; i<args.length; i+=2) {
+					asgmt.put(bn.getVariableByName(args[i]), args[i+1]);
 				}
+				Distribution d = ea.ask(bn, bn.getVariableByName(args[1]), asgmt);
+				System.out.println(d);
+			} catch (IOException | ParserConfigurationException | SAXException e) {
+				e.printStackTrace();
+			}
 			
 		} else {
+			BIFParser bparser;
 			try {
-				BIFParser bparser = new BIFParser(new FileInputStream(args[0]));
+				bparser = new BIFParser(new FileInputStream(args[0]));
 				BayesianNetwork bn = bparser.parseNetwork();
 				Assignment asgmt = new Assignment();
 				for (int i=2; i<args.length; i+=2) {
@@ -48,7 +50,6 @@ public class MyBNInferencer {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			
 			
 		}
 

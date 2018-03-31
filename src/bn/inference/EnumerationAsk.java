@@ -9,40 +9,44 @@ import bn.core.Distribution;
 import bn.core.RandomVariable;
 
 public class EnumerationAsk implements Inferencer {
-
+	
 	@Override
 	public Distribution ask(BayesianNetwork bn, RandomVariable X, Assignment e) {
 		Distribution Q = new Distribution(X);
-		for (int i = 0; i < X.getDomain().size(); i++) {
-			Assignment temp = new Assignment();
-			temp.set(X, X.getDomain().get(i));
-			Q.put(X.getDomain().get(i), enumerateAll(bn, bn.getVariableListTopologicallySorted(), temp));
+		for (Object xi : X.getDomain()) {
+			Assignment temp = e.copy();
+			temp.set(X, xi);
+			Q.put(xi, enumerateAll(bn, (ArrayList<RandomVariable>)bn.getVariableListTopologicallySorted(), temp));
 		}
 		Q.normalize();
 		return Q;
 	}
 	
-	public double enumerateAll(BayesianNetwork bn, List<RandomVariable> rv, Assignment e) {
-		List<RandomVariable> vars = new ArrayList<RandomVariable>();
+	@SuppressWarnings("unchecked")
+	public double enumerateAll(BayesianNetwork bn, ArrayList<RandomVariable> vars, Assignment e) {
+		ArrayList<RandomVariable> restVars = new ArrayList<RandomVariable>();
+		restVars = (ArrayList<RandomVariable>) vars.clone();
+		
 		if (vars.size()==0) return 1.0;
 		
-		for(int i=0; i<vars.size();i++) {
-			vars.add(rv.get(i));
-		}
-		
 		RandomVariable Y = vars.get(0);
-		if (e.containsKey(Y)) {
-			e = e.copy();
-			return bn.getProb(Y, e)*enumerateAll(bn, vars, e);
+		
+		restVars.remove(0);
+		
+		if (e.variableSet().contains(Y)) {
+			Assignment tempe = e.copy();
+			double getProb=bn.getProb(Y, tempe);
+			return getProb*enumerateAll(bn, restVars, tempe);
 		} else {
 			double rest=0;
-			for (int i = 0; i < Y.getDomain().size(); i++) {
-				Assignment tempA = new Assignment();
-				tempA.set(Y, Y.getDomain().get(i));
-				rest+=(bn.getProb(Y, tempA)*enumerateAll(bn, vars, tempA));
+			for (Object yi : Y.getDomain()) {
+				Assignment tempe = e.copy();
+				tempe.set(Y, yi);
+				rest+=(bn.getProb(Y, tempe)*enumerateAll(bn, restVars, tempe));
 			}
 			return rest;
 		}
 	}
-
+	
 }
+

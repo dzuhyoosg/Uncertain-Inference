@@ -22,6 +22,14 @@ public class Assignment extends LinkedHashMap<RandomVariable,Object> {
     public Assignment() {
     	super();
     }
+    
+    // constructor for Rejection Sampling
+    public Assignment(Assignment a) {
+    	super();
+    	for (RandomVariable rv : a.keySet()) {
+    		this.set(rv, a.get(rv));
+    	}
+    }
 
     /**
      * Set the value of the given RandomVariable stored in this Assignment.

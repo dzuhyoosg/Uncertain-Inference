@@ -65,13 +65,19 @@ public class Distribution extends LinkedHashMap<Object,Double> {
      * Normalize this distribution so that the probabilities add up to 1.
      */
     public void normalize() {
-	double sum = 0.0;
-	for (Double value : values()) {
-	    sum += value.doubleValue();
-	}
-	for (Object key : keySet()) {
-	    put(key, get(key).doubleValue()/sum);
-	}
+		double sum = 0.0;
+		for (Double value : values()) {
+		    sum += value.doubleValue();
+		}
+		for (Object key : keySet()) {
+		    put(key, get(key).doubleValue()/sum);
+		}
+    }
+    
+    public void initialize(RandomVariable X) {
+        for (Object o : X.getDomain()) {
+            this.put(o, 0);
+        }
     }
 
 }

@@ -210,29 +210,29 @@ A1 A2 A3  A1 A2 A3  A1 A2 A3  A1 A2 A3    A1 A2 A3  A1 A2 A3  A1 A2 A3  A1 A2 A3
      * inside a {@code definition} element.
      */
     public Iterator<ProbabilityValue> valueIterator() {
-	final Stack<Entry> stack = new Stack<Entry>();
-	stack.push(root);
-	return new Iterator<ProbabilityValue>() {
-	    public boolean hasNext() {
-		return !stack.isEmpty();
-	    }
-	    public ProbabilityValue next() throws NoSuchElementException {
-		while (true) {
-		    Entry entry = stack.pop();
-		    if (entry instanceof ProbabilityValue) {
-			return (ProbabilityValue)entry;
-		    } else {
-			Dimension dimen = (Dimension)entry;
-			Collection<Entry> entries = dimen.entries.values();
-			// Push in reverse order (to preserve DFS ordering)
-			reversePush(stack, entries.iterator());
+		final Stack<Entry> stack = new Stack<Entry>();
+		stack.push(root);
+		return new Iterator<ProbabilityValue>() {
+		    public boolean hasNext() {
+		    	return !stack.isEmpty();
 		    }
-		}
-	    }
-	    public void remove() {
-		throw new UnsupportedOperationException();
-	    }
-	};
+		    public ProbabilityValue next() throws NoSuchElementException {
+			while (true) {
+			    Entry entry = stack.pop();
+			    if (entry instanceof ProbabilityValue) {
+				return (ProbabilityValue)entry;
+			    } else {
+				Dimension dimen = (Dimension)entry;
+				Collection<Entry> entries = dimen.entries.values();
+				// Push in reverse order (to preserve DFS ordering)
+				reversePush(stack, entries.iterator());
+			    }
+			}
+		    }
+		    public void remove() {
+			throw new UnsupportedOperationException();
+		    }
+		};
     }
 
     /**

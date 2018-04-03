@@ -49,4 +49,3 @@ public class EnumerationAsk implements Inferencer {
 	}
 	
 }
-

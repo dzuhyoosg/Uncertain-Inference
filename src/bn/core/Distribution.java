@@ -58,7 +58,7 @@ public class Distribution extends LinkedHashMap<Object,Double> {
      * distribution.
      */
     public void put(Object x, int i) {
-	put(x, new Double(i));
+    	put(x, new Double(i));
     }
 
     /**

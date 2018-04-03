@@ -32,11 +32,11 @@ public class MyBNApproxInferencer {
 				long startTime = System.currentTimeMillis();
 				Distribution d = rs.rejectSamp(samples, bn, bn.getVariableByName(args[2]), asgmt);
 				Distribution d2 = lw.likelihoodWeighting(samples, bn, bn.getVariableByName(args[2]), asgmt);
-				long endtime = System.currentTimeMillis();
+				long endTime = System.currentTimeMillis();
 				
-				System.out.println("Runtime: " + (endtime-startTime) + "ms");
 				System.out.println("By Rejection Sampling: " + d);
 				System.out.println("By Likelihood Weighting: " + d2);
+				System.out.println("Runtime: " + (endTime-startTime) + "ms");
 			} catch (IOException | ParserConfigurationException | SAXException e) {
 				e.printStackTrace();
 			}
@@ -44,17 +44,22 @@ public class MyBNApproxInferencer {
 		} else {
 			BIFParser bparser;
 			try {
-				bparser = new BIFParser(new FileInputStream(args[0]));
+				bparser = new BIFParser(new FileInputStream(args[1]));
 				int samples = Integer.parseInt(args[0]);
 				BayesianNetwork bn = bparser.parseNetwork();
 				Assignment asgmt = new Assignment();
 				for (int i=3; i<args.length; i+=2) {
 					asgmt.put(bn.getVariableByName(args[i]), args[i+1]);
 				}
-				Distribution d = rs.rejectSamp(samples, bn, bn.getVariableByName(args[1]), asgmt);
+				
+				long startTime = System.currentTimeMillis();
+				Distribution d = rs.rejectSamp(samples, bn, bn.getVariableByName(args[2]), asgmt);
 				Distribution d2 = lw.likelihoodWeighting(samples, bn, bn.getVariableByName(args[2]), asgmt);
+				long endTime = System.currentTimeMillis();
+				
 				System.out.println("By Rejection Sampling: " + d);
 				System.out.println("By Likelihood Weighting: " + d2);
+				System.out.println("Runtime: " + (endTime-startTime) + "ms");
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {

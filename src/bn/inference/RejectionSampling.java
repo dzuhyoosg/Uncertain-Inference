@@ -6,21 +6,16 @@ import bn.core.*;
 public class RejectionSampling {
 
 	public Distribution rejectSamp(int N, BayesianNetwork bn, RandomVariable X, Assignment e) {
-//		long startTime = System.currentTimeMillis();
 		Distribution D = new Distribution(X);
 		D.initialize(X); // initialize x with random values for the variables in the nonevidence variables in bn
 		for (int j=1; j<=N; j++) {
 			Assignment sample = priorSample(bn);
-//			System.out.println(sample);
 			if (isConsistent(e, sample)) {
 				D.put(sample.get(X), D.get(sample.get(X))+1);
 			}
 		}
-		D.normalize();
-//		long endtime = System.currentTimeMillis();
-//		System.out.println("Runtime:" + (endtime-startTime) + "ms");
+		D.normalize();;
 		return D;
-		
 	}
 	
 	public Assignment priorSample(BayesianNetwork bn) {
